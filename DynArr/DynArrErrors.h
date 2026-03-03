@@ -1,0 +1,9 @@
+#pragma once
+
+typedef enum {
+    OPERATION_OK  = 0,
+    MEMORY_ALLOCATION_FAILD = 100,
+    ARRAY_NOT_DEFINED = 201,
+    OPERATION_NOT_DEFINED = 202,
+    INCOMPATIBLE_ARRAY_TYPES = 301
+} DynArrErrors;
