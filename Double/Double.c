@@ -3,7 +3,7 @@
 static TypeInfo* DOUBLE_TYPE_INFO = NULL;
 
 void doubleCompare(const void* arg1, const void* arg2, void* result){
-
+    *(int*)result = *(double*)arg1 > *(double*)arg2 ? -1 : 1;
 }
 TypeInfo* GetDoubleTypeInfo(){
     if(DOUBLE_TYPE_INFO == NULL){
@@ -11,4 +11,5 @@ TypeInfo* GetDoubleTypeInfo(){
         DOUBLE_TYPE_INFO->size = sizeof(double);
         DOUBLE_TYPE_INFO->compare = doubleCompare;
     }
+    return DOUBLE_TYPE_INFO;
 }
