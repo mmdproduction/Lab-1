@@ -2,5 +2,5 @@
 
 #include"TypeInfo/TypeInfo.h"
 
-void doubleCompare(const void* arg1, const void* arg2, void* result);
+void double_compare(const void* arg1, const void* arg2, void* result);
 TypeInfo* GetDoubleTypeInfo();

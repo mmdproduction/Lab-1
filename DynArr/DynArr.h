@@ -10,7 +10,7 @@ typedef struct {
 
 typedef void* (*SingularOperation)(void* arg);
 
-DynArr* createClearArray(size_t arraySize, TypeInfo* dataType, DynArrErrors* ArrErrors);
+DynArr* create_clear_array(size_t arraySize, TypeInfo* dataType, DynArrErrors* ArrErrors);
 void set(DynArr* array, const void* data, u_int index);
 void* get(DynArr* array, u_int index, DynArrErrors* ArrErrors);
 

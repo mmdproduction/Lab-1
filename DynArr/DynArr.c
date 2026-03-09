@@ -4,22 +4,24 @@
 
 void set(DynArr* array, const void* data, u_int index){
     if(index < array->arraySize){
-        memmove((u_ptr)array->data + sizeof(array->typeInfo->size)*index, data, sizeof(array->typeInfo->size));
+        memmove((u_ptr)array->data + array->typeInfo->size*index, data, array->typeInfo->size);
     }
 }
 void* get(DynArr* array, u_int index, DynArrErrors* ArrErrors){
     if(index < array->arraySize){
-        void* data = malloc(sizeof(array->typeInfo->size));
+        void* data = malloc(array->typeInfo->size);
         if(data == NULL){
             *ArrErrors = MEMORY_ALLOCATION_FAILD;
             return NULL;
         }
-        memcpy(data, (u_ptr)array->data + sizeof(array->typeInfo->size)*index, sizeof(array->typeInfo->size));
+        memcpy(data, (u_ptr)array->data + array->typeInfo->size*index, array->typeInfo->size);
         return data;
     }
+    *ArrErrors = INDEX_OUT_OF_ARRAY;
+    return NULL;
 }
 
-DynArr* createClearArray(u_int arraySize, TypeInfo* dataType, DynArrErrors* ArrErrors){
+DynArr* create_clear_array(u_int arraySize, TypeInfo* dataType, DynArrErrors* ArrErrors){
     DynArr* mArray = malloc(sizeof(DynArr));
     if(mArray == NULL){
         *ArrErrors = MEMORY_ALLOCATION_FAILD;
@@ -27,32 +29,30 @@ DynArr* createClearArray(u_int arraySize, TypeInfo* dataType, DynArrErrors* ArrE
     }
     mArray->arraySize = arraySize;
     mArray->typeInfo = dataType;
-    mArray->data = malloc(mArray->arraySize*sizeof(mArray->typeInfo->size));
+    mArray->data = malloc(mArray->arraySize*mArray->typeInfo->size);
     if(mArray->data == NULL){
         free(mArray);
         *ArrErrors = MEMORY_ALLOCATION_FAILD;
     }
-    double zero = 0.;
-    for(u_int i = 0; i < mArray->arraySize; i++){
-       set(mArray, &zero, i);
-    }
+    memset(mArray, 0, mArray->arraySize*mArray->typeInfo->size);
     return mArray;
 }
 
 DynArr* map(SingularOperation* func, DynArr* array, DynArrErrors* ArrErrors){
     DynArr* mArray = malloc(sizeof(DynArr));
-    if(mArray = NULL){
+    if(mArray == NULL){
         *ArrErrors = MEMORY_ALLOCATION_FAILD;
         return NULL;
     }
     mArray->arraySize = array->arraySize;
     mArray->typeInfo = array->typeInfo;
-    mArray->data = malloc(mArray->arraySize*sizeof(mArray->typeInfo->size));
+    mArray->data = malloc(mArray->arraySize*mArray->typeInfo->size);
     if(mArray->data == NULL){
         free(mArray);
         *ArrErrors = MEMORY_ALLOCATION_FAILD;
     }
     for(u_int i = 0; i < mArray->arraySize; i++){
+
     }
 
 }
