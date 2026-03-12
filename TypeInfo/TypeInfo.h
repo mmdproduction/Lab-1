@@ -13,4 +13,6 @@ typedef struct
 {
     size_t size;
     BinaryOperation compare;
+    void (*write)(void* arg);
+    void (*print)(const void* arg);
 }TypeInfo;

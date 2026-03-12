@@ -1,6 +1,6 @@
 #pragma once
 #include"TypeInfo.h"
-
+#include"DynArrErrors.h"
 
 typedef struct {
     size_t array_size;
