@@ -12,5 +12,5 @@ typedef void (*BinaryOperation)(const void* arg1, const void* arg2, void* result
 typedef struct 
 {
     size_t size;
-    BinaryOperation* compare;
+    BinaryOperation compare;
 }TypeInfo;
