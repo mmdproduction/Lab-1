@@ -2,7 +2,7 @@
 
 set(TESTER test_runner.c test_dynarr.c)
 set(UNITY ../lib/unity/unity.c)
-set(LIBS ../DynArr/DynArr.c ../Integer/Integer.c)
+set(LIBS ../DynArr/DynArr.c ../Integer/Integer.c ../Double/Double.c)
 
 
 add_executable(tests_runner
@@ -17,9 +17,7 @@ target_include_directories(tests_runner PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../TypeInfo/
     ${CMAKE_CURRENT_SOURCE_DIR}/../Integer/ 
     ${CMAKE_CURRENT_SOURCE_DIR}/../Double/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../DynArr/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Inputs/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Outputs/)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../DynArr/)
 
 
 

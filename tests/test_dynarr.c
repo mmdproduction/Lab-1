@@ -49,7 +49,7 @@ void test_create_int_clear_array_success(void) {
     TEST_ASSERT_NOT_NULL(arr->data);
 }
 
-void test_create_double_clear_array_success(void) {
+void test_create_double_clear_array_success(void){
     arr = create_clear_array(5, &double_type, &err);
     TEST_ASSERT_NOT_NULL(arr);
     TEST_ASSERT_EQUAL(OPERATION_OK, err);
@@ -67,7 +67,17 @@ void test_create_clear_array_null_type(void){
 
 void test_int_set_success(void){
     arr = create_clear_array(5, &int_type, &err);
-    int v1 = 1488, v2 = 7, v3 = 9, v4 = 108, v5 = 112;
-
-
+    int value = 1488;
+    set(arr, &value, 2,&err);
+    TEST_ASSERT_EQUAL(OPERATION_OK, err);
+    int* ptr = get_pointer(arr, 2, &err);
+    TEST_ASSERT_EQUAL(value, *ptr);
+    
+}
+void test_double_set_success(void){
+    arr = create_clear_array(5, &double_type, &err);
+    int value = 1488;
+    set(arr, &value, 2,&err);
+    TEST_ASSERT_EQUAL(OPERATION_OK, err);
+    
 }
