@@ -19,4 +19,5 @@ void* get_pointer(DynArr* array, u_int index, DynArrErrors* ArrErrors);
 DynArr* map(SingularOperation func, DynArr* array, DynArrErrors* ArrErrors);
 DynArr* where(BooleanFunction func, DynArr* array, DynArrErrors* ArrErrors);
 DynArr* concatenation(DynArr* fArray, DynArr* sArray, DynArrErrors* ArrErrors);
+void quick_sort(DynArr* array, DynArrErrors* array_errors,  int low, int high);
 static int partition(DynArr* array, DynArrErrors* array_errors, int low,  int high);

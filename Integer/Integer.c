@@ -10,7 +10,8 @@ void int_write(void* arg){
     scanf("%d", arg);
 }
 void int_print(const void* arg){
-    printf("%d", arg);
+    int nm = *(int*)arg;
+    printf("%d ", nm);
 }
 
 TypeInfo* GetIntTypeInfo(){
