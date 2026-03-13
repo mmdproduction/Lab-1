@@ -2,8 +2,8 @@
 
 static TypeInfo* DOUBLE_TYPE_INFO = NULL;
 
-void double_compare(const void* arg1, const void* arg2, int* result){
-    *(int*)result = *(double*)arg1 > *(double*)arg2 ? -1 : 1;
+void double_compare(const void* arg1, const void* arg2, void* result){
+    *(int*)result = *(double*)arg1 > *(double*)arg2 ? 1 : -1;
 }
 void double_write(void* arg);
 void double_print(const void* arg);

@@ -14,9 +14,15 @@ add_subdirectory(Outputs)
 
 
 target_link_libraries(lab_1 ${LIBS})
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/TypeInfo/)
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Integer/)
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Double/)
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/DynArr/)
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Inputs/)
-target_include_directories(Inputs PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Outputs/)
+
+add_subdirectory(tests) 
+
+target_include_directories(lab_1 PUBLIC 
+${CMAKE_CURRENT_SOURCE_DIR}/TypeInfo/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Integer/ 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Double/
+    ${CMAKE_CURRENT_SOURCE_DIR}/DynArr/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Inputs/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Outputs/)
+
+

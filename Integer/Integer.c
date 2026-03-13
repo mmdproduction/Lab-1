@@ -2,8 +2,8 @@
 
 static TypeInfo* INT_TYPE_INFO = NULL;
 
-void int_compare(const void* arg1, const void* arg2, int* result){
-    *(int*)result =  *(int*)arg1 > *(int*)arg2 ? -1 : 1;
+void int_compare(const void* arg1, const void* arg2, void* result){
+    *(int*)result =  *(int*)arg1 > *(int*)arg2 ? 1 : -1;
 }
 
 void int_write(void* arg){
