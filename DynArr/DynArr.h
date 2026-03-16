@@ -20,5 +20,6 @@ DynArr* map(SingularOperation func, DynArr* array, DynArrErrors* ArrErrors);
 DynArr* where(BooleanFunction func, DynArr* array, DynArrErrors* ArrErrors);
 DynArr* concatenation(DynArr* fArray, DynArr* sArray, DynArrErrors* ArrErrors);
 void quick_sort(DynArr* array, DynArrErrors* array_errors,  int low, int high);
+int swap(DynArr* array, DynArrErrors* array_errors, u_int first, u_int second);
 static int partition(DynArr* array, DynArrErrors* array_errors, int low,  int high);
 char* dyn_arr_to_string(DynArr* array, DynArrErrors* array_errors);

@@ -3,26 +3,103 @@
 #include"Integer.h"
 #include"Double.h"
 #include"Outputs.h"
+#include<locale.h>
+#include<windows.h>
 
- void* double_func(void* val){
+void* int_func(void* val){
         static int result;
         result = (*(int*)val) * 2;
         return &result;
     }
-int booli(void* arg){
-    if(*(int*)arg > 3) return 0;
+
+ void* double_func(void* val){
+        static double result;
+        result = (*(double*)val) * 2;
+        return &result;
+    }
+
+static int booli(void* val){
+    if(*(int*)val > 3) return 0;
     return 1;
 }
+static int is_double_positive(void* val) {
+    return (*(double*)val) > 0.0;
+}
+
+typedef enum{
+    EXIT,
+    CREATE_DYN_ARRAY,
+    CHOOSE_ARRAY, 
+    NUM_CHHOSEN_ARRAY,
+    MAP,
+    CONCATENATION, 
+    WHERE
+}ChooseMode;
 
 int main(){
-    TypeInfo* int_info = GetDoubleTypeInfo();
-    DynArrErrors* array_errors = malloc(sizeof(DynArrErrors));
-    DynArr* array = input_dyn_arr(int_info, array_errors);
+    setlocale(LC_ALL, "Russian");
+    SetConsoleOutputCP(CP_UTF8);
 
+    TypeInfo* int_info = GetIntTypeInfo();
+    TypeInfo* double_info = GetDoubleTypeInfo();
+    DynArrErrors array_errors = OPERATION_OK;
+    u_int num_arrays = 0,  created_arrays = 0, choosen_array_num = 0;
+    u_int type = 0, size = 0;
+    puts("Введите количество массивов: ");
+    scanf("%d", &num_arrays);
+    DynArr** dyn_arrays = malloc(num_arrays*sizeof(DynArr));
+    ChooseMode choose = EXIT;
+    do{
+        puts("Выберите режим: \n 1 - Создать динамический массив\n 2 - Выбрать динамический массив\n 3 - Выбранный массива\n 4 - Функция map(для текущего массива)\n 5 - Конкатенация (для двух массивов)\n 6- Функция where(для выбранного массива) 0 - Выйти");
+        scanf("%d", &choose);
+        switch(choose)
+        {
+        case EXIT:
+            break;
+        
+        case CREATE_DYN_ARRAY:
+            puts("Выберите тип:\n 1 - Целочисленный \n 2 - С плавающей запятой");
+            scanf("%d", type);
+            puts("Введите размер: \n");
+            scanf("%d", size);
+            if(created_arrays < num_arrays && (type == 1) && (size > 0)){
+                dyn_arrays[created_arrays] = create_clear_array(size, int_info, &array_errors);
+            }
+            created_arrays++;
+            break;
 
-    dyn_arr_to_string(map(double_func,array, array_errors), array_errors);
-    quick_sort(array, array_errors, 0, array->array_size - 1);
-    puts("\n");
-    dyn_arr_to_string(array, array_errors);
+        case NUM_CHHOSEN_ARRAY:
+            printf("Номер выбранного массива: %d\n", choosen_array_num);
+            puts("Выбранный массив: \n");
+            output_dyn_arr(dyn_arrays[choosen_array_num - 1], &array_errors);
+            break;
+
+        case MAP:
+            if(strcmp(dyn_arrays[choosen_array_num - 1]->type_info->format, "int") == 0){
+                dyn_arrays[choosen_array_num - 1] = map(int_func, dyn_arrays[choosen_array_num - 1], &array_errors);
+            }
+            else{
+                dyn_arrays[choosen_array_num - 1] = map(double_func, dyn_arrays[choosen_array_num - 1], &array_errors);
+            }
+            output_dyn_arr(dyn_arrays[choosen_array_num - 1], &array_errors);
+            break;
+        case WHERE:
+            if(strcmp(dyn_arrays[choosen_array_num - 1]->type_info->format, "int") == 0){
+                dyn_arrays[choosen_array_num - 1] = where(booli, dyn_arrays[choosen_array_num - 1], &array_errors);
+            }
+            else{
+                dyn_arrays[choosen_array_num - 1] = where(is_double_positive, dyn_arrays[choosen_array_num - 1], &array_errors);
+            }
+            output_dyn_arr(dyn_arrays[choosen_array_num - 1], &array_errors);
+            break;
+
+        case CHOOSE_ARRAY:
+            puts("Введите номер  массива: \n");
+            scanf("%d", &choosen_array_num);
+            break;
+        }
+    }while(choose != EXIT);
+
+    
 
 }

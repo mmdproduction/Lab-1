@@ -4,7 +4,7 @@
 
 void set(DynArr* array, const void* data, u_int index, DynArrErrors* array_errors){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return;
     }
     if(index >= array->array_size) {
@@ -51,7 +51,7 @@ void* get_pointer(DynArr* array, u_int index, DynArrErrors* array_errors){
 DynArr* create_clear_array(u_int array_size, TypeInfo* dataType, DynArrErrors* array_errors){
     DynArr* dyn_array = malloc(sizeof(DynArr));
     if(dyn_array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return NULL;
     }
     if(dataType == NULL) {
@@ -73,7 +73,7 @@ DynArr* create_clear_array(u_int array_size, TypeInfo* dataType, DynArrErrors* a
 
 DynArr* map(SingularOperation func, DynArr* array, DynArrErrors* array_errors){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return NULL;
     }
     if(func == NULL){
@@ -102,7 +102,7 @@ DynArr* map(SingularOperation func, DynArr* array, DynArrErrors* array_errors){
 
 DynArr* where(BooleanFunction func, DynArr* array, DynArrErrors* array_errors){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return NULL;
     }
     if(func == NULL){
@@ -200,7 +200,7 @@ int swap(DynArr* array, DynArrErrors* array_errors, u_int first, u_int second){
 
 int partition(DynArr* array, DynArrErrors* array_errors, int low,  int high){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return -1;
     }
     if(array->data == NULL){
@@ -224,7 +224,7 @@ int partition(DynArr* array, DynArrErrors* array_errors, int low,  int high){
 }
 void quick_sort(DynArr* array, DynArrErrors* array_errors,  int low, int high){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return;
     }
     if(array->data == NULL){
@@ -245,20 +245,71 @@ void quick_sort(DynArr* array, DynArrErrors* array_errors,  int low, int high){
 
 
 char* dyn_arr_to_string(DynArr* array, DynArrErrors* array_errors){
-    void* data = array->data;
-    char string[255] = {0};
-    if(strcmp((array->type_info->format), "int")){
-        for( u_int i = 0; i  < array->array_size; ++i)
-        {
-            sprintf( &string[ strlen(string) ],  "%d, ", *(int*)get_pointer(array, i, array_errors));
-        }
+    if(array == NULL){
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
+        return NULL;
     }
-    else{
-        for( u_int i = 0; i  < array->array_size; ++i)
-        {
-            sprintf( &string[ strlen(string) ],  "%.2f, ", *(double*)get_pointer(array, i, array_errors));
-        }
+    if(array->data == NULL){
+        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        return NULL;
     }
-    printf("%s\n", string);
-    return string;
+    size_t elem_max_size = 15;
+    size_t separator_size = 2;  
+    size_t buffer_size = array->array_size * (elem_max_size + separator_size) + 1;
+    
+    char* buffer = malloc(buffer_size);
+    if(buffer == NULL) {
+        if(array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        return NULL;
+    }
+    buffer[0] = '\0';
+    
+
+    int is_int = (strcmp(array->type_info->format, "int") == 0);
+    
+
+    size_t offset = 0;
+    size_t remaining = buffer_size;
+    int written = 0;
+    
+    for(u_int i = 0; i < array->array_size; ++i) {
+
+        DynArrErrors local_err = OPERATION_OK;
+        void* elem = get_pointer(array, i, &local_err);
+        if(elem == NULL) {
+            free(buffer);
+            if(array_errors) *array_errors = local_err;
+            return NULL;
+        }
+        
+
+        if(i > 0) {
+            written = snprintf(buffer + offset, remaining, ", ");
+            if(written < 0 || (size_t)written >= remaining) {
+                free(buffer);
+                if(array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+                return NULL;
+            }
+            offset += written;
+            remaining = buffer_size - offset;
+        }
+
+        if(is_int) {
+            written = snprintf(buffer + offset, remaining, "%d", *(int*)elem);
+        } else {
+            written = snprintf(buffer + offset, remaining, "%.2f", *(double*)elem);
+        }
+        
+        if(written < 0 || (size_t)written >= remaining) {
+            free(buffer);
+            if(array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+            return NULL;
+        }
+        
+        offset += written;
+        remaining = buffer_size - offset;
+    }
+    
+    if(array_errors) *array_errors = OPERATION_OK;
+    return buffer;
 }
