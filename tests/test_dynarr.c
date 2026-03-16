@@ -13,16 +13,14 @@ static DynArrErrors err;
 
 
 static TypeInfo int_type = {
+    .format = "int",
     .size = sizeof(int),
-    .compare = int_compare,
-    .write = int_write,
-    .print = int_print
+    .compare = int_compare
 };
 static TypeInfo double_type = {
+    .format = "double",
     .size = sizeof(double),
-    .compare = double_compare,
-    .write = double_write,
-    .print = double_print
+    .compare = double_compare
 };
 
 void setUp(void) {
@@ -38,6 +36,11 @@ void tearDown(void) {
     }
 }
 
+ void* double_func(void* val){
+        static int result;
+        result = (*(int*)val) * 2;
+        return &result;
+    }
 
 
 
@@ -76,8 +79,63 @@ void test_int_set_success(void){
 }
 void test_double_set_success(void){
     arr = create_clear_array(5, &double_type, &err);
-    int value = 1488;
+    double value = 14.88;
     set(arr, &value, 2,&err);
     TEST_ASSERT_EQUAL(OPERATION_OK, err);
+    double* ptr = get_pointer(arr, 2, &err);
+    TEST_ASSERT_EQUAL(value, *ptr);
+}
+
+void test_int_quick_sort(void) {
+    arr = create_clear_array(5, &int_type, &err);
+    int values[] = {5, 2, 8, 1, 9};
+    for(u_int i = 0; i < 5; i++) set(arr, &values[i], i, &err);
     
+    quick_sort(arr, &err, 0, 4);
+    TEST_ASSERT_EQUAL(OPERATION_OK, err);
+    
+    int* d = (int*)arr->data;
+    TEST_ASSERT_EQUAL(1, d[0]);
+    TEST_ASSERT_EQUAL(2, d[1]);
+    TEST_ASSERT_EQUAL(5, d[2]);
+    TEST_ASSERT_EQUAL(8, d[3]);
+    TEST_ASSERT_EQUAL(9, d[4]);
+}
+
+
+void test_double_quick_sort(void) {
+    arr = create_clear_array(5, &double_type, &err);
+    double values[] = {5.3, 2.1, 8.1, 1.9, 9.7};
+    for(u_int i = 0; i < 5; i++) set(arr, &values[i], i, &err);
+    
+    quick_sort(arr, &err, 0, 4);
+    TEST_ASSERT_EQUAL(OPERATION_OK, err);
+    
+    double* d = (double*)arr->data;
+    TEST_ASSERT_EQUAL(1.9, d[0]);
+    TEST_ASSERT_EQUAL(2.1, d[1]);
+    TEST_ASSERT_EQUAL(5.3, d[2]);
+    TEST_ASSERT_EQUAL(8.1, d[3]);
+    TEST_ASSERT_EQUAL(9.7, d[4]);
+}
+
+void test_int_map_success(void) {
+    arr = create_clear_array(3, &int_type, &err);
+    int v1 = 1, v2 = 2, v3 = 3;
+    set(arr, &v1, 0, &err);
+    set(arr, &v2, 1, &err);
+    set(arr, &v3, 2, &err);
+    
+    
+    DynArr* map_arr = map(double_func, arr, &err);
+
+    TEST_ASSERT_NOT_NULL(map_arr);
+    
+    int* d = (int*)map_arr->data;
+    TEST_ASSERT_EQUAL(2, d[0]);
+    TEST_ASSERT_EQUAL(4, d[1]);
+    TEST_ASSERT_EQUAL(6, d[2]);
+    
+    free(map_arr->data);
+    free(map_arr);
 }

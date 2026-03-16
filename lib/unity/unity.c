@@ -556,6 +556,7 @@ static void UnityTestResultsBegin(const char* file, const UNITY_LINE_TYPE line)
     UNITY_OUTPUT_CHAR(':');
     UnityPrint(Unity.CurrentTestName);
     UNITY_OUTPUT_CHAR(':');
+    UNITY_OUTPUT_CHAR('\t');
 #endif
 #endif
 #endif

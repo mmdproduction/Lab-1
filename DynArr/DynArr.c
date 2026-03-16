@@ -242,3 +242,23 @@ void quick_sort(DynArr* array, DynArrErrors* array_errors,  int low, int high){
     }
     *array_errors = OPERATION_OK;
 }
+
+
+char* dyn_arr_to_string(DynArr* array, DynArrErrors* array_errors){
+    void* data = array->data;
+    char string[255] = {0};
+    if(strcmp((array->type_info->format), "int")){
+        for( u_int i = 0; i  < array->array_size; ++i)
+        {
+            sprintf( &string[ strlen(string) ],  "%d, ", *(int*)get_pointer(array, i, array_errors));
+        }
+    }
+    else{
+        for( u_int i = 0; i  < array->array_size; ++i)
+        {
+            sprintf( &string[ strlen(string) ],  "%.2f, ", *(double*)get_pointer(array, i, array_errors));
+        }
+    }
+    printf("%s\n", string);
+    return string;
+}
