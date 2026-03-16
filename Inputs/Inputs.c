@@ -2,10 +2,8 @@
 
 
 
-DynArr* input_dyn_arr(TypeInfo* type_info, DynArrErrors* array_errors){
-    int size;
+DynArr* input_dyn_arr(TypeInfo* type_info, DynArrErrors* array_errors, int size){
     char buffer[128];
-    scanf("%d", &size);
     if(size > 0){
     DynArr* array = create_clear_array(size, type_info, array_errors);
     if(*array_errors != OPERATION_OK){
@@ -13,7 +11,7 @@ DynArr* input_dyn_arr(TypeInfo* type_info, DynArrErrors* array_errors){
         return NULL;
     }
     char* format;
-    if(strcmp(type_info->format, "int")) format = "%d";
+    if(strcmp(type_info->format, "int") == 0) format = "%d";
     else format = "%lf";
     for(u_int index = 0; index < array->array_size; ++index){
         void* num = malloc(array->type_info->size);

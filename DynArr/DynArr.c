@@ -11,7 +11,7 @@ void set(DynArr* array, const void* data, u_int index, DynArrErrors* array_error
         if (array_errors) *array_errors = INDEX_OUT_OF_ARRAY;
         return;
     }
-    memmove((byte_ptr)array->data + array->type_info->size*index, data, array->type_info->size);
+    memcpy((byte_ptr)array->data + array->type_info->size*index, data, array->type_info->size);
     if (array_errors) *array_errors = OPERATION_OK;
 
 }

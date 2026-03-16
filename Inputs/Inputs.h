@@ -4,4 +4,4 @@
 #include"stdio.h"
 
 
-DynArr* input_dyn_arr(TypeInfo* type_info, DynArrErrors* array_errors);
+DynArr* input_dyn_arr(TypeInfo* type_info, DynArrErrors* array_errors, int size);
