@@ -1,6 +1,6 @@
 #include"Integer.h"
 
-static TypeInfo* INT_TYPE_INFO = NULL;
+static TypeInfo* int_type_info = NULL;
 
 void int_compare(const void* arg1, const void* arg2, void* result){
     *(int*)result =  *(int*)arg1 > *(int*)arg2 ? 1 : -1;
@@ -8,11 +8,11 @@ void int_compare(const void* arg1, const void* arg2, void* result){
 
 
 TypeInfo* GetIntTypeInfo(){
-    if(INT_TYPE_INFO == NULL){
-        INT_TYPE_INFO = (TypeInfo*)malloc(sizeof(TypeInfo));
-        INT_TYPE_INFO->size = sizeof(int);
-        INT_TYPE_INFO->format = "int";
-        INT_TYPE_INFO->compare = int_compare;
+    if(int_type_info == NULL){
+        int_type_info = (TypeInfo*)malloc(sizeof(TypeInfo));
+        int_type_info->size = sizeof(int);
+        int_type_info->format = "int";
+        int_type_info->compare = int_compare;
     }
-    return INT_TYPE_INFO;
+    return int_type_info;
 }

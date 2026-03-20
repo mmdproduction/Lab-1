@@ -37,6 +37,40 @@ typedef enum{
     SET
 }ChooseMode;
 
+
+void clear_console_ansi(void) {
+    printf("\033[2J\033[H");
+    fflush(stdout);
+}
+void errors_processing(DynArrErrors array_errors){
+    switch(array_errors){
+    case OPERATION_OK:
+        puts("Ошибок нет. Работа завершена");
+        break;
+    case OPERATION_NOT_DEFINED:
+        puts("Ошибка - операция не определена. Работа завершена");
+        break;
+    case MEMORY_ALLOCATION_FAILED:
+        puts("Ошибка выделения памяти. Работа завершена");
+        break;
+    case ARRAY_NOT_DEFINED:
+        puts("Ошибка - массив не определен. Работа завершена");
+        break;
+    case INCOMPATIBLE_ARRAY_TYPES:
+        puts("Ошибка - несовместимые типы массивов. Работа завершена");
+        break;
+    case INDEX_OUT_OF_ARRAY:
+        puts("Ошибка - индекс за пределами массива. Работа завершена");
+        break;
+    case INVALID_ARRAY_SIZE:
+        puts("Ошибка - неверный размер массива. Работа завершена");
+        break;
+    case INVALID_TYPE_INFO:
+        puts("Ошибка - неверный тип данных. Работа завершена");
+        break;
+    }
+}
+
 int main(){
     setlocale(LC_ALL, "Russian");
 
@@ -44,7 +78,7 @@ int main(){
     TypeInfo* double_info = GetDoubleTypeInfo();
     DynArrErrors array_errors = OPERATION_OK;
     u_int num_arrays = 0,  created_arrays = 0, choosen_array_num = 0;
-    u_int type = 0, size = 0;
+    u_int type = 0, size = 0, array_num = 0;
     puts("Введите количество массивов: ");
     scanf("%d", &num_arrays);
     DynArr** dyn_arrays = malloc(num_arrays*sizeof(DynArr*));
@@ -65,16 +99,25 @@ int main(){
             scanf("%d", &type);
             puts("Введите размер: ");
             scanf("%d", &size);
-            if(created_arrays < num_arrays && (type == 1) && (size > 0)){
+            if(created_arrays <= num_arrays && (type == 1) && (size > 0)){
                 dyn_arrays[created_arrays] = create_clear_array(size, int_info, &array_errors);
+                created_arrays++;
+                choosen_array_num = created_arrays;
             }
-            created_arrays++;
-            choosen_array_num = created_arrays;
+            else if(created_arrays <= num_arrays && (type == 2) && (size > 0)){
+                dyn_arrays[created_arrays] = create_clear_array(size, double_info, &array_errors);
+                created_arrays++;
+                choosen_array_num = created_arrays;
+            }
             break;
 
         case NUM_CHHOSEN_ARRAY:
             printf("Номер выбранного массива: %d\n", choosen_array_num);
             puts("Выбранный массив: ");
+            if(dyn_arrays[choosen_array_num - 1] == NULL){
+                array_errors = ARRAY_NOT_DEFINED;
+                break;
+            }
             output_dyn_arr(dyn_arrays[choosen_array_num - 1], &array_errors);
             break;
 
@@ -112,9 +155,15 @@ int main(){
             break;
         case CHOOSE_ARRAY:
             puts("Введите номер  массива: \n");
-            scanf("%d", &choosen_array_num);
+            scanf("%d", &array_num);
+            if(array_num <= created_arrays) choosen_array_num = array_num;
+            else puts("Неверный номер массива");
+            break;
+        default:
+            clear_console_ansi();
+            puts("Неверный ввод!");
             break;
         }
-    }while(choose != EXIT);
-    
+    }while(choose != EXIT && array_errors == OPERATION_OK);
+    errors_processing(array_errors);
 }

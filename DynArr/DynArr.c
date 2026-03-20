@@ -7,6 +7,10 @@ void set(DynArr* array, const void* data, u_int index, DynArrErrors* array_error
         if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return;
     }
+    if(data == NULL){
+        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        return;
+    }
     if(index >= array->array_size) {
         if (array_errors) *array_errors = INDEX_OUT_OF_ARRAY;
         return;
@@ -36,7 +40,7 @@ void set(DynArr* array, const void* data, u_int index, DynArrErrors* array_error
 
 void* get_pointer(DynArr* array, u_int index, DynArrErrors* array_errors){
     if(array == NULL){
-        if (array_errors) *array_errors = MEMORY_ALLOCATION_FAILED;
+        if (array_errors) *array_errors = ARRAY_NOT_DEFINED;
         return NULL;
     }
     if(array->array_size > index){
@@ -313,3 +317,5 @@ char* dyn_arr_to_string(DynArr* array, DynArrErrors* array_errors){
     if(array_errors) *array_errors = OPERATION_OK;
     return buffer;
 }
+
+
